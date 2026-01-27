@@ -146,12 +146,7 @@ export const AccountHeader: React.FC<{
               isRedesignEnabled() && redesignClasses.nameWrapper,
             )}
           >
-            <AccountName
-              accountId={accountId}
-              className={classNames(
-                isRedesignEnabled() && redesignClasses.name,
-              )}
-            />
+            <AccountName accountId={accountId} />
             {isRedesignEnabled() && <AccountButtons accountId={accountId} />}
           </div>
 
