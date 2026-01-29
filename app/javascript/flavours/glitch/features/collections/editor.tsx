@@ -11,14 +11,22 @@ import ListAltIcon from '@/material-icons/400-24px/list_alt.svg?react';
 import type {
   ApiCollectionJSON,
   ApiCreateCollectionPayload,
+  ApiUpdateCollectionPayload,
 } from 'flavours/glitch/api_types/collections';
 import { Button } from 'flavours/glitch/components/button';
 import { Column } from 'flavours/glitch/components/column';
 import { ColumnHeader } from 'flavours/glitch/components/column_header';
-import { TextAreaField, ToggleField } from 'flavours/glitch/components/form_fields';
+import {
+  TextAreaField,
+  ToggleField,
+} from 'flavours/glitch/components/form_fields';
 import { TextInputField } from 'flavours/glitch/components/form_fields/text_input_field';
 import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
-import { createCollection } from 'flavours/glitch/reducers/slices/collections';
+import {
+  createCollection,
+  fetchCollection,
+  updateCollection,
+} from 'flavours/glitch/reducers/slices/collections';
 import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
 
 const messages = defineMessages({
@@ -83,16 +91,18 @@ const CollectionSettings: React.FC<{
       e.preventDefault();
 
       if (id) {
-        // void dispatch(
-        //   updateList({
-        //     id,
-        //     title,
-        //     exclusive,
-        //     replies_policy: repliesPolicy,
-        //   }),
-        // ).then(() => {
-        //   return '';
-        // });
+        const payload: ApiUpdateCollectionPayload = {
+          id,
+          name,
+          description,
+          tag_name: topic,
+          discoverable,
+          sensitive,
+        };
+
+        void dispatch(updateCollection({ payload })).then(() => {
+          history.push(`/collections`);
+        });
       } else {
         const payload: ApiCreateCollectionPayload = {
           name,
@@ -103,6 +113,7 @@ const CollectionSettings: React.FC<{
         if (topic) {
           payload.tag_name = topic;
         }
+
         void dispatch(
           createCollection({
             payload,
@@ -114,8 +125,6 @@ const CollectionSettings: React.FC<{
             );
             history.push(`/collections`);
           }
-
-          return '';
         });
       }
     },
@@ -198,7 +207,7 @@ const CollectionSettings: React.FC<{
           hint={
             <FormattedMessage
               id='collections.mark_as_sensitive_hint'
-              defaultMessage="Hides the collection's description and accounts behind a content warning. The title will still be visible."
+              defaultMessage="Hides the collection's description and accounts behind a content warning. The collection name will still be visible."
             />
           }
           checked={sensitive}
@@ -232,9 +241,9 @@ export const CollectionEditorPage: React.FC<{
   const isLoading = isEditMode && !collection;
 
   useEffect(() => {
-    // if (id) {
-    //   dispatch(fetchCollection(id));
-    // }
+    if (id) {
+      void dispatch(fetchCollection({ collectionId: id }));
+    }
   }, [dispatch, id]);
 
   const pageTitle = intl.formatMessage(id ? messages.edit : messages.create);
