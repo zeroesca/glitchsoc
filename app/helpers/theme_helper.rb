@@ -54,7 +54,7 @@ module ThemeHelper
 
   def current_skin
     skins = Themes.instance.skins_for(current_flavour)
-    [current_user&.setting_skin, Setting.skin, 'system', 'default'].find { |skin| skins.include?(skin) }
+    [current_user&.setting_skin, Setting.skin, 'default'].find { |skin| skins.include?(skin) }
   end
 
   def current_theme
