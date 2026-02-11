@@ -285,8 +285,8 @@ module ApplicationHelper
   end
 
   # glitch-soc addition to handle the multiple flavors
-  def flavoured_vite_typescript_tag(pack_name, **)
-    vite_typescript_tag("#{Themes.instance.flavour(current_flavour)['pack_directory'].delete_prefix('app/javascript/')}/#{pack_name}", **)
+  def flavoured_vite_typescript_tag(pack_name, flavour: nil, **)
+    vite_typescript_tag("#{Themes.instance.flavour(flavour || current_flavour)['pack_directory'].delete_prefix('app/javascript/')}/#{pack_name}", **)
   end
 
   private
