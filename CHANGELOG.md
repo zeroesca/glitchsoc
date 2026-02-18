@@ -2,6 +2,55 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.4.13] - 2026-02-03
+
+### Security
+
+- Fix ActivityPub collection caching logic for pinned posts and featured tags not checking blocked accounts ([GHSA-ccpr-m53r-mfwr](https://github.com/mastodon/mastodon/security/advisories/GHSA-ccpr-m53r-mfwr))
+
+### Fixed
+
+- Fix relationship cache not being cleared when handling account migrations (#37664 by @ClearlyClaire)
+- Fix error when encountering invalid tag in updated object (#37635 by @ClearlyClaire)
+- Fix recycled connections not being immediately closed (#37335 and #37674 by @ClearlyClaire and @shleeable)
+
+## [4.4.12] - 2026-01-20
+
+### Security
+
+- Fix missing limits on various federated properties [GHSA-gg8q-rcg7-p79g](https://github.com/mastodon/mastodon/security/advisories/GHSA-gg8q-rcg7-p79g)
+- Fix remote user suspension bypass [GHSA-5h2f-wg8j-xqwp](https://github.com/mastodon/mastodon/security/advisories/GHSA-5h2f-wg8j-xqwp)
+- Fix missing length limits on some user-provided fields [GHSA-6x3w-9g92-gvf3](https://github.com/mastodon/mastodon/security/advisories/GHSA-6x3w-9g92-gvf3)
+- Fix missing access check for push notification settings update [GHSA-f3q8-7vw3-69v4](https://github.com/mastodon/mastodon/security/advisories/GHSA-f3q8-7vw3-69v4)
+
+### Changed
+
+- Skip tombstone creation on deleting from 404 (#37533 by @ClearlyClaire)
+
+### Fixed
+
+- Fix potential duplicate handling of quote accept/reject/delete (#37537 by @ClearlyClaire)
+- Fix `FeedManager#filter_from_home` error when handling a reblog of a deleted status (#37486 by @ClearlyClaire)
+- Fix needlessly complicated SQL query in status batch removal (#37469 by @ClearlyClaire)
+- Fix `Vary` parsing in cache control enforcement (#37426 by @MegaManSec)
+- Fix thread-unsafe ActivityPub activity dispatch (#37423 by @MegaManSec)
+- Fix SignatureParser accepting duplicate parameters in HTTP Signature header (#37375 by @shleeable)
+
+## [4.4.11] - 2026-01-07
+
+### Security
+
+- Fix SSRF protection bypass ([GHSA](https://github.com/mastodon/mastodon/security/advisories/GHSA-xfrj-c749-jxxq))
+- Fix missing ownership check in severed relationships controller ([GHSA](https://github.com/mastodon/mastodon/security/advisories/GHSA-ww85-x9cp-5v24))
+
+### Changed
+
+- Change HTTP Signature verification status from 401 to 503 on temporary failure to get remote actor (#37221 by @ClearlyClaire)
+
+### Fixed
+
+- Fix mentions of domain-blocked users being processed (#37257 by @ClearlyClaire)
+
 ## [4.4.10] - 2025-12-08
 
 ### Security
