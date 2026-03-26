@@ -11021,6 +11021,7 @@ noscript {
           &__source {
             display: inline-flex;
             align-items: center;
+            max-width: 100%;
             color: var(--color-text-tertiary);
             gap: 4px;
             overflow: hidden;
@@ -11239,12 +11240,6 @@ noscript {
     width: 16px;
     height: 16px;
     color: var(--color-text-secondary);
-  }
-
-  & > span {
-    display: flex;
-    align-items: center;
-    gap: 8px;
   }
 
   a {
