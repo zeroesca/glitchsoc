@@ -24,6 +24,7 @@ import { ActionBar } from '../../account/components/action_bar';
 import { isRedesignEnabled } from '../common';
 
 import { AccountName } from './account_name';
+import { AccountSubscriptionForm } from './account_subscription_form';
 import { AccountBadges } from './badges';
 import { AccountButtons } from './buttons';
 import { FamiliarFollowers } from './familiar_followers';
@@ -220,6 +221,10 @@ export const AccountHeader: React.FC<{
                 />
                 <AccountHeaderFields accountId={accountId} />
               </div>
+
+              {!me && account.email_subscriptions && (
+                <AccountSubscriptionForm accountId={accountId} />
+              )}
             </div>
           )}
 
