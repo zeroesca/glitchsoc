@@ -174,6 +174,8 @@ export const AccountHeader: React.FC<{
 
           <AccountBadges accountId={accountId} />
 
+          <AccountNumberFields accountId={accountId} />
+
           {!isMe && !suspendedOrHidden && (
             <FamiliarFollowers accountId={accountId} />
           )}
@@ -200,8 +202,6 @@ export const AccountHeader: React.FC<{
               {!me && account.email_subscriptions && (
                 <AccountSubscriptionForm accountId={accountId} />
               )}
-
-              <AccountNumberFields accountId={accountId} />
             </div>
           )}
 
