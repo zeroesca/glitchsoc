@@ -19,10 +19,11 @@ import type { Account } from '@/flavours/glitch/models/account';
 import { getAccountHidden } from '@/flavours/glitch/selectors/accounts';
 import { useAppSelector, useAppDispatch } from '@/flavours/glitch/store';
 
+import { FamiliarFollowers } from '../../../components/familiar_followers';
+
 import { AccountName } from './account_name';
 import { AccountSubscriptionForm } from './account_subscription_form';
 import { AccountButtons } from './buttons';
-import { FamiliarFollowers } from './familiar_followers';
 import { AccountHeaderFields } from './fields';
 import { AccountInfo } from './info';
 import { MemorialNote } from './memorial_note';
@@ -165,7 +166,10 @@ export const AccountHeader: React.FC<{
           <AccountNumberFields accountId={accountId} />
 
           {!isMe && !suspendedOrHidden && (
-            <FamiliarFollowers accountId={accountId} />
+            <FamiliarFollowers
+              accountId={accountId}
+              className={classes.familiarFollowers}
+            />
           )}
 
           {!suspendedOrHidden && (
