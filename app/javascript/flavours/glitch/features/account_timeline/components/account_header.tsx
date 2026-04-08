@@ -21,7 +21,6 @@ import { useAppSelector, useAppDispatch } from '@/flavours/glitch/store';
 
 import { AccountName } from './account_name';
 import { AccountSubscriptionForm } from './account_subscription_form';
-import { AccountBadges } from './badges';
 import { AccountButtons } from './buttons';
 import { FamiliarFollowers } from './familiar_followers';
 import { AccountHeaderFields } from './fields';
@@ -162,8 +161,6 @@ export const AccountHeader: React.FC<{
               forceMenu={'share' in navigator}
             />
           </div>
-
-          <AccountBadges accountId={accountId} />
 
           <AccountNumberFields accountId={accountId} />
 
