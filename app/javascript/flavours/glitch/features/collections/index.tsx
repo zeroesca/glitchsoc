@@ -21,7 +21,7 @@ import {
 } from 'flavours/glitch/reducers/slices/collections';
 import { useAppSelector, useAppDispatch } from 'flavours/glitch/store';
 
-import { CollectionListItem } from './detail/collection_list_item';
+import { CollectionListItem } from './components/collection_list_item';
 import { messages as editorMessages } from './editor';
 
 const messages = defineMessages({

@@ -20,7 +20,8 @@ import {
 } from 'flavours/glitch/components/modal_shell';
 import { useAppDispatch } from 'flavours/glitch/store';
 
-import { AuthorNote } from '.';
+import { AuthorNote } from '../detail';
+
 import classes from './share_modal.module.scss';
 
 const messages = defineMessages({
