@@ -10,11 +10,16 @@ import { AccountListItem } from 'flavours/glitch/components/account_list_item';
 import { Avatar } from 'flavours/glitch/components/avatar';
 import { Button } from 'flavours/glitch/components/button';
 import { DisplayName } from 'flavours/glitch/components/display_name';
+import { useAccountHandle } from 'flavours/glitch/components/display_name/default';
 import { EmptyState } from 'flavours/glitch/components/empty_state';
 import {
   FormStack,
   ComboboxField,
 } from 'flavours/glitch/components/form_fields';
+import {
+  ListItemContent,
+  ListItemWrapper,
+} from 'flavours/glitch/components/list_item';
 import {
   Article,
   ItemList,
@@ -22,6 +27,7 @@ import {
 } from 'flavours/glitch/components/scrollable_list/components';
 import { useAccount } from 'flavours/glitch/hooks/useAccount';
 import { useSearchAccounts } from 'flavours/glitch/hooks/useSearchAccounts';
+import { domain } from 'flavours/glitch/initial_state';
 import {
   addCollectionItem,
   getCollectionItemIds,
@@ -58,24 +64,89 @@ const AddedAccountItem: React.FC<{
   return <AccountListItem accountId={accountId} renderButton={renderButton} />;
 };
 
-const SuggestedAccountItem: React.FC<{ account: ApiMutedAccountJSON }> = (
-  props,
-) => {
-  const account = useAccount(props.account.id);
+const SuggestedAccountItem: React.FC<{ id: string }> = ({ id }) => {
+  const account = useAccount(id);
+  const handle = useAccountHandle(account, domain);
 
   if (!account) return null;
 
   return (
-    <>
-      <Avatar account={account} />
-      <DisplayName account={account} />
-    </>
+    <ListItemWrapper
+      className={classes.suggestion}
+      icon={<Avatar account={account} size={40} />}
+    >
+      <ListItemContent subtitle={handle}>
+        <DisplayName account={account} variant='simple' />
+      </ListItemContent>
+    </ListItemWrapper>
   );
 };
 
 const renderAccountItem = (account: ApiMutedAccountJSON) => (
-  <SuggestedAccountItem account={account} />
+  <SuggestedAccountItem id={account.id} />
 );
+
+type GroupKey = 'available' | 'mustFollow' | 'disabled';
+
+function groupSuggestions(accounts: ApiMutedAccountJSON[]) {
+  const { available, disabled } = Object.groupBy(accounts, (account) => {
+    if (getIsItemDisabled(account)) {
+      return 'disabled';
+    }
+    // if (account.locked && !relationship?.following) {
+    //   return 'mustFollow';
+    // }
+    return 'available';
+  });
+
+  // Returning a new object ensures a fixed property order
+  return { available, disabled };
+}
+
+const renderGroupTitle = (groupKey: GroupKey, titleId: string) => {
+  if (groupKey === 'available') {
+    return null;
+  }
+
+  let title: React.ReactElement;
+  let description: React.ReactElement;
+
+  if (groupKey === 'mustFollow') {
+    title = (
+      <FormattedMessage
+        id='collections.suggestions.must_follow'
+        defaultMessage='Must follow first'
+      />
+    );
+    description = (
+      <FormattedMessage
+        id='collections.suggestions.must_follow_desc'
+        defaultMessage='These accounts review all follow requests. Followers can add them to collections.'
+      />
+    );
+  } else {
+    title = (
+      <FormattedMessage
+        id='collections.suggestions.can_not_add'
+        defaultMessage='Can’t be added'
+      />
+    );
+    description = (
+      <FormattedMessage
+        id='collections.suggestions.can_not_add_desc'
+        defaultMessage='These accounts may have opted out of discovery, or they might be on a server that doesn’t support collections.'
+      />
+    );
+  }
+
+  return (
+    <ListItemWrapper className={classes.suggestionGroup}>
+      <ListItemContent id={titleId} subtitle={description}>
+        {title}
+      </ListItemContent>
+    </ListItemWrapper>
+  );
+};
 
 const getItemId = (account: ApiMutedAccountJSON) => account.id;
 
@@ -262,10 +333,11 @@ export const CollectionAccounts: React.FC<{
             onKeyDown={handleSearchKeyDown}
             disabled={hasMaxAccounts}
             isLoading={isLoadingSuggestions}
-            items={suggestedAccounts}
+            items={groupSuggestions(suggestedAccounts)}
             getItemId={getItemId}
             getIsItemDisabled={getIsItemDisabled}
             renderItem={renderAccountItem}
+            renderGroupTitle={renderGroupTitle}
             onSelectItem={handleSelectItem}
             status={
               hasMaxAccounts
