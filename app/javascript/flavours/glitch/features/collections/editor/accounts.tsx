@@ -4,6 +4,8 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import { useHistory } from 'react-router-dom';
 
+import type { Map as ImmutableMap } from 'immutable';
+
 import type { ApiMutedAccountJSON } from 'flavours/glitch/api_types/accounts';
 import type { ApiCollectionJSON } from 'flavours/glitch/api_types/collections';
 import { AccountListItem } from 'flavours/glitch/components/account_list_item';
@@ -28,6 +30,7 @@ import {
 import { useAccount } from 'flavours/glitch/hooks/useAccount';
 import { useSearchAccounts } from 'flavours/glitch/hooks/useSearchAccounts';
 import { domain } from 'flavours/glitch/initial_state';
+import type { Relationship } from 'flavours/glitch/models/relationship';
 import {
   addCollectionItem,
   getCollectionItemIds,
@@ -88,19 +91,37 @@ const renderAccountItem = (account: ApiMutedAccountJSON) => (
 
 type GroupKey = 'available' | 'mustFollow' | 'disabled';
 
-function groupSuggestions(accounts: ApiMutedAccountJSON[]) {
-  const { available, disabled } = Object.groupBy(accounts, (account) => {
-    if (getIsItemDisabled(account)) {
+const canAccountBeAdded = (account: ApiMutedAccountJSON) =>
+  ['automatic', 'manual'].includes(account.feature_approval.current_user);
+
+function groupSuggestions(
+  accounts: ApiMutedAccountJSON[],
+  relationships: ImmutableMap<string, Relationship>,
+) {
+  const { available, mustFollow, disabled } = Object.groupBy(
+    accounts,
+    (account): GroupKey => {
+      if (canAccountBeAdded(account)) {
+        return 'available';
+      }
+
+      const canAccountBeAddedByFollowers =
+        account.feature_approval.automatic.includes('followers') ||
+        account.feature_approval.manual.includes('followers');
+
+      if (
+        canAccountBeAddedByFollowers &&
+        !relationships.get(account.id)?.following
+      ) {
+        return 'mustFollow';
+      }
+
       return 'disabled';
-    }
-    // if (account.locked && !relationship?.following) {
-    //   return 'mustFollow';
-    // }
-    return 'available';
-  });
+    },
+  );
 
   // Returning a new object ensures a fixed property order
-  return { available, disabled };
+  return { available, mustFollow, disabled };
 }
 
 const renderGroupTitle = (groupKey: GroupKey, titleId: string) => {
@@ -149,10 +170,8 @@ const renderGroupTitle = (groupKey: GroupKey, titleId: string) => {
 };
 
 const getItemId = (account: ApiMutedAccountJSON) => account.id;
-
-// Disable accounts who can't be added to a collection
 const getIsItemDisabled = (account: ApiMutedAccountJSON) =>
-  !['automatic', 'manual'].includes(account.feature_approval.current_user);
+  !canAccountBeAdded(account);
 
 export const CollectionAccounts: React.FC<{
   collection?: ApiCollectionJSON | null;
@@ -191,6 +210,10 @@ export const CollectionAccounts: React.FC<{
     // Don't suggest accounts that were already added
     filterResults: (account) => !accountIds.includes(account.id),
   });
+
+  const relationships = useAppSelector((state) => state.relationships);
+
+  const groupedItems = groupSuggestions(suggestedAccounts, relationships);
 
   const handleSearchValueChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -333,7 +356,7 @@ export const CollectionAccounts: React.FC<{
             onKeyDown={handleSearchKeyDown}
             disabled={hasMaxAccounts}
             isLoading={isLoadingSuggestions}
-            items={groupSuggestions(suggestedAccounts)}
+            items={groupedItems}
             getItemId={getItemId}
             getIsItemDisabled={getIsItemDisabled}
             renderItem={renderAccountItem}
