@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.4.19] - 2026-06-24
+
+### Security
+
+- Fix TLS certificate verification being disabled on setups with `LDAP_TLS_NO_VERIFY=true` ([GHSA-3rhr-8phh-jm86](https://github.com/mastodon/mastodon/security/advisories/GHSA-3rhr-8phh-jm86))
+- Update dependencies
+
+### Fixed
+
+- Fix being unable to unmark media as sensitive when "always mark media as sensitive" is enabled in web UI (#39339 by @matrix07012)
+
+## [4.4.18] - 2026-06-03
+
+### Security
+
+- Fix allowed attribution domains spoofing ([GHSA-rwcw-vq68-g34p](https://github.com/mastodon/mastodon/security/advisories/GHSA-rwcw-vq68-g34p))
+- Fix uncaught exception in message sanitization causing Denial of Service ([GHSA-qrgq-9fx2-vf2r](https://github.com/mastodon/mastodon/security/advisories/GHSA-qrgq-9fx2-vf2r))
+- Update dependencies
+
+### Fixed
+
+- Fix remote statuses with large media descriptions being rejected (#39135 by @ClearlyClaire)
+
 ## [4.4.17] - 2026-05-20
 
 ### Security
