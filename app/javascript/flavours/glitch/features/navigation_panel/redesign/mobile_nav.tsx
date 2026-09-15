@@ -40,7 +40,7 @@ export const RedesignMobileNavigation: React.FC = () => {
   );
 
   if (!signedIn) {
-    return null;
+    return <SlideOutNavigation />;
   }
 
   return (
@@ -99,6 +99,7 @@ export const RedesignMobileNavigation: React.FC = () => {
         </ul>
         <ComposeRedesignButton inline />
       </nav>
+
       <SlideOutNavigation />
     </>
   );
