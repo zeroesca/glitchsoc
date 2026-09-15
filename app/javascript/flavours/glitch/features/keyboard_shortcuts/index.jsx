@@ -8,8 +8,10 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 
 import InfoIcon from '@/material-icons/400-24px/info.svg?react';
 import { Column } from '@/flavours/glitch/components/column';
-import { ColumnHeader } from '@/flavours/glitch/components/column/header';
+import { ColumnHeader as LegacyColumnHeader } from '@/flavours/glitch/components/column/header';
 import { injectIntl } from '@/flavours/glitch/components/intl';
+import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
+import { ColumnHeader } from '@/flavours/glitch/components/column_header';
 
 const messages = defineMessages({
   heading: { id: 'keyboard_shortcuts.heading', defaultMessage: 'Keyboard Shortcuts' },
@@ -27,12 +29,19 @@ class KeyboardShortcuts extends ImmutablePureComponent {
 
     return (
       <Column>
-        <ColumnHeader
-          title={intl.formatMessage(messages.heading)}
-          icon='info-circle'
-          iconComponent={InfoIcon}
-          multiColumn={multiColumn}
-        />
+        {isRedesignEnabled() ? (
+          <ColumnHeader
+            title={intl.formatMessage(messages.heading)}
+            withBackButton='auto'
+          />
+        ) : (
+          <LegacyColumnHeader
+            title={intl.formatMessage(messages.heading)}
+            icon='info-circle'
+            iconComponent={InfoIcon}
+            multiColumn={multiColumn}
+          />
+        )}
 
         <div className='keyboard-shortcuts scrollable optionally-scrollable'>
           <table>
