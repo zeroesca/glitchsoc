@@ -13,6 +13,7 @@ import {
 } from '@phosphor-icons/react';
 
 import { fetchLists } from '@/flavours/glitch/actions/lists';
+import { closeNavigation } from '@/flavours/glitch/actions/navigation';
 import { fetchFollowedHashtags } from '@/flavours/glitch/actions/tags_typed';
 import { FOCUS_TARGET } from '@/flavours/glitch/components/navigation_focus_target';
 import { useScrollSensor } from '@/flavours/glitch/hooks/useScrollSensor';
@@ -88,6 +89,7 @@ export const RedesignNavigationPanel: React.FC<{
   );
 
   const openComposer = useCallback(() => {
+    dispatch(closeNavigation());
     dispatch(openNewComposer({ type: 'post' }));
   }, [dispatch]);
 
