@@ -19,6 +19,7 @@ import { fetchFollowRequests } from '@/flavours/glitch/actions/accounts';
 import { fetchLists } from '@/flavours/glitch/actions/lists';
 import { closeNavigation } from '@/flavours/glitch/actions/navigation';
 import { fetchFollowedHashtags } from '@/flavours/glitch/actions/tags_typed';
+import { Button } from '@/flavours/glitch/components/button/redesign';
 import { Callout } from '@/flavours/glitch/components/callout/redesign';
 import { FOCUS_TARGET } from '@/flavours/glitch/components/navigation_focus_target';
 import { useScrollSensor } from '@/flavours/glitch/hooks/useScrollSensor';
@@ -170,17 +171,21 @@ export const RedesignNavigationPanel: React.FC<{
         <>
           {transientSingleColumn && <TransientSingleColumnCallout />}
           <ul className={classes.list}>
-            <NavigationLink
-              withSpaceAfter
-              as='button'
-              onClick={openComposer}
-              iconComponent={PenNibIcon}
-            >
-              <FormattedMessage
-                id='tabs_bar.publish'
-                defaultMessage='New Post'
-              />
-            </NavigationLink>
+            <li>
+              <Button
+                leadingIcon={PenNibIcon}
+                onClick={openComposer}
+                variant='solid'
+                color='accent'
+                size='md'
+                className={classes.newPostButton}
+              >
+                <FormattedMessage
+                  id='tabs_bar.publish'
+                  defaultMessage='New Post'
+                />
+              </Button>
+            </li>
             <NavigationLink to='/home' iconComponent={HouseIcon}>
               <FormattedMessage id='tabs_bar.home' defaultMessage='Home' />
             </NavigationLink>
