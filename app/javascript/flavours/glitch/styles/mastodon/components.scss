@@ -11002,6 +11002,16 @@ noscript {
   padding: 10px 14px; // glitch: reduced padding
   border-bottom: 1px solid var(--color-border-primary);
 
+  &--redesign {
+    padding-inline: 0;
+    padding-bottom: 0;
+
+    .notification-ungrouped__header {
+      margin-bottom: 0;
+      padding-inline-start: var(--space-4);
+    }
+  }
+
   &__header {
     display: flex;
     align-items: center;
