@@ -55,7 +55,7 @@ class ModalRoot extends PureComponent {
         e.stopPropagation();
         e.preventDefault();
       }
-    } else if (key === 'enter' && !e.defaultPrevented && !!this.props.children) {
+    } else if (key === 'escape' && !e.defaultPrevented && !!this.props.children) {
       this.props.onClose();
     }
   };
